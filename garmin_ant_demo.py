@@ -60,7 +60,7 @@ class HRM(event.EventCallback):
     def process(self, msg):
         if isinstance(msg, message.ChannelBroadcastDataMessage):
             d = datetime.datetime.now().time()
-            print '%s時%s分%s.%s秒n' % (d.hour, d.minute, d.second, d.microsecond)
+            print '%s:%s:%s.%s秒n' % (d.hour, d.minute, d.second, d.microsecond)
             print("heart rate is {}".format(ord(msg.payload[-1])))
 
 SERIAL = '/dev/ttyUSB0'
