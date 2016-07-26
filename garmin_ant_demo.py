@@ -7,6 +7,8 @@
 """
 import sys
 import time
+from datetime import datetime
+
 from ant.core import driver, node, event, message, log
 from ant.core.constants import CHANNEL_TYPE_TWOWAY_RECEIVE, TIMEOUT_NEVER
 
@@ -57,6 +59,8 @@ class HRM(event.EventCallback):
 
     def process(self, msg):
         if isinstance(msg, message.ChannelBroadcastDataMessage):
+            d = datetime.datetime.now().time()
+            '%s時%s分%s.%s秒n' % (d.hour, d.minute, d.second, d.microsecond)
             print("heart rate is {}".format(ord(msg.payload[-1])))
 
 SERIAL = '/dev/ttyUSB0'
