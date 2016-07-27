@@ -103,14 +103,17 @@ SERIAL = '/dev/ttyUSB0'
 NETKEY = 'B9A521FBBD72C345'.decode('hex')
 
 with HRM(serial=SERIAL, netkey=NETKEY) as hrm:
-    hrm.start()
 
     app = tornado.web.Application([
-        (r'/', WebSocketHandler),
+        (r'/', HRM),
     ])
     app.listen(12345)
     tornado.ioloop.IOLoop.instance().start()
     print("WebSocket server started.")
+
+
+    hrm.start()
+
 
     while True:
         try:
