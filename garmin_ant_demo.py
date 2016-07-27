@@ -20,6 +20,11 @@ from tornado.ioloop import PeriodicCallback
 from ant.core import driver, node, event, message, log
 from ant.core.constants import CHANNEL_TYPE_TWOWAY_RECEIVE, TIMEOUT_NEVER
 
+
+
+define("port", default=12345, help="run on the given port", type=int)
+
+
 class HRM(event.EventCallback, tornado.web.RequestHandler):
 
     def __init__(self, serial, netkey):
@@ -101,6 +106,13 @@ NETKEY = 'B9A521FBBD72C345'.decode('hex')
 
 with HRM(serial=SERIAL, netkey=NETKEY) as hrm:
     hrm.start()
+
+    app = tornado.web.Application([
+        (r'/', WebSocketHandler),
+    ])
+    app.listen(12345)
+    tornado.ioloop.IOLoop.instance().start()
+
     while True:
         try:
             time.sleep(1)
