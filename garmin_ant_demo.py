@@ -22,8 +22,6 @@ from ant.core.constants import CHANNEL_TYPE_TWOWAY_RECEIVE, TIMEOUT_NEVER
 
 
 
-define("port", default=12345, help="run on the given port", type=int)
-
 
 class HRM(event.EventCallback, tornado.web.RequestHandler):
 
