@@ -112,6 +112,7 @@ with HRM(serial=SERIAL, netkey=NETKEY) as hrm:
     ])
     app.listen(12345)
     tornado.ioloop.IOLoop.instance().start()
+    print("WebSocket server started.")
 
     while True:
         try:
