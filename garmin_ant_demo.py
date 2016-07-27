@@ -1,3 +1,5 @@
+# coding:utf-8
+
 """
     Code based on:
         https://github.com/mvillalba/python-ant/blob/develop/demos/ant.core/03-basicchannel.py
