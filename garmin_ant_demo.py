@@ -9,10 +9,16 @@ import sys
 import time
 from datetime import datetime
 
+import tornado.ioloop
+import tornado.web
+import tornado.websocket
+from tornado.ioloop import PeriodicCallback
+
+
 from ant.core import driver, node, event, message, log
 from ant.core.constants import CHANNEL_TYPE_TWOWAY_RECEIVE, TIMEOUT_NEVER
 
-class HRM(event.EventCallback):
+class HRM(event.EventCallback, tornado.web.RequestHandler):
 
     def __init__(self, serial, netkey):
         self.serial = serial
@@ -60,8 +66,33 @@ class HRM(event.EventCallback):
     def process(self, msg):
         if isinstance(msg, message.ChannelBroadcastDataMessage):
             d = datetime.datetime.now().time()
-            print '%s:%s:%s.%s' % (d.hour, d.minute, d.second, d.microsecond)
+            print('%s:%s:%s.%s' % (d.hour, d.minute, d.second, d.microsecond))
             print("heart rate is {}".format(ord(msg.payload[-1])))
+
+    def open(self):
+        self.i = 0
+        self.callback = PeriodicCallback(self._send_message, 400)  # 遅延用コールバック
+        self.callback.start()
+        print
+        "WebSocket opened"
+
+        # クライアントからメッセージが送られてくると呼び出される
+
+    def on_message(self, message):
+        print
+        message
+
+    # コールバックスタートで呼び出しが始まる
+    def _send_message(self):
+        self.i += 1
+        self.write_message(str(self.i))
+
+    # ページが閉じ、コネクションが切れる事で呼び出し
+    def on_close(self):
+        self.callback.stop()
+        print
+        "WebSocket closed"
+
 
 SERIAL = '/dev/ttyUSB0'
 NETKEY = 'B9A521FBBD72C345'.decode('hex')
